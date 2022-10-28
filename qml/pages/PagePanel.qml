@@ -42,6 +42,10 @@ Rectangle{
             anchors.top: btnControl.bottom
             btnIconSource: "../../images/svg_images/infomation.svg"
             text: "Summary"
+            onClicked: {
+                backend.loopPanel()
+                view.push(Qt.resolvedUrl("PageSummary.qml"))
+            }
 
         }
         LeftMenuBtn{
@@ -49,6 +53,11 @@ Rectangle{
             anchors.top: btnInfomation.bottom
             btnIconSource: "../../images/svg_images/system.svg"
             text: "System Monitor"
+            onClicked: {
+                backend.loopPanel()
+                backend.loopSystem()
+                view.push(Qt.resolvedUrl("PageSystemMonitor.qml"))
+            }
 
         }
         LeftMenuBtn{
@@ -56,6 +65,10 @@ Rectangle{
             anchors.top: btnSystem.bottom
             btnIconSource: "../../images/svg_images/history.svg"
             text: "Usage History"
+            onClicked: {
+                backend.loopPanel()
+                view.push(Qt.resolvedUrl("PageHistory.qml"))
+            }
 
         }
     }
@@ -345,6 +358,6 @@ Rectangle{
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:0.66;height:700;width:1200}
+    D{i:0;autoSize:true;formeditorZoom:0.5;height:700;width:1200}
 }
 ##^##*/

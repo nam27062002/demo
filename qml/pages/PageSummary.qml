@@ -8,7 +8,7 @@ Rectangle{
     id: content
     anchors.fill: parent
     color: "#00000000"
-    property bool check: true
+    property string lastClick: ""
     property int distance: 150
     Timer {
         id: timer
@@ -45,6 +45,10 @@ Rectangle{
             anchors.top: parent.top
             text: "Control panel"
             colorDefault: "#55aaff"
+            onClicked: {
+                backend.loopPanel()
+                view.push(Qt.resolvedUrl("PagePanel.qml"))
+            }
         }
         LeftMenuBtn{
             id: btnInfomation
@@ -58,12 +62,19 @@ Rectangle{
             anchors.top: btnInfomation.bottom
             btnIconSource: "../../images/svg_images/system.svg"
             text: "System Monitor"
+            onClicked: {
+                backend.loopSystem()
+                view.push(Qt.resolvedUrl("PageSystemMonitor.qml"))
+            }
         }
         LeftMenuBtn{
             id: btnHistory
             anchors.top: btnSystem.bottom
             btnIconSource: "../../images/svg_images/history.svg"
             text: "Usage History"
+            onClicked: {
+                view.push(Qt.resolvedUrl("PageHistory.qml"))
+            }
         }
     }
     Rectangle{
@@ -296,25 +307,34 @@ Rectangle{
 //    }
     Connections{
         target: backend
-        function onSeenSignalShowSceen(data){
+        function onSeenSignalShowSceen(data,val){
             list0.clear()
-
-            zoom.running = true
-            zoom2.running = true
-            check = !check
-            for (let i = 0; i < data.length;i++){
-                list0.append({"name": data[i][0],"name2":data[i][1] })
-            }
-            delay(800, function(){
-                if(!check){
+            if (val == 1){
+                zoom.running = true
+                zoom2.running = true
+                for (let i = 0; i < data.length;i++){
+                    list0.append({"name": data[i][0],"name2":data[i][1] })
+                }
+                delay(800,function(){
                     content3.visible = true
+                })
+            }
+            else if (val == 0){
+                for (let i = 0; i < data.length;i++){
+                    list0.append({"name": data[i][0],"name2":data[i][1] })
                 }
-                else{
+            }
+            else if (val == 2){
+                zoom.running = true
+                zoom2.running = true
+                delay(800,function(){
                     content3.visible = false
-                }
-            })
+                })
+
+            }
         }
         function onSeenInfo(data){
+            console.log(data)
             aos.name2 = data[0]
             acpu.name2 = data[1]
             adisk.name2 = data[2]
@@ -329,8 +349,10 @@ Rectangle{
 
 
 
+
+
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:0.5;height:700;width:1500}
+    D{i:0;autoSize:true;formeditorZoom:0.5;height:700;width:1700}
 }
 ##^##*/

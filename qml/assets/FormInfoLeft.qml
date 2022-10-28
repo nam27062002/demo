@@ -23,7 +23,40 @@ Rectangle{
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
             onClicked: {
-                backend.showScreen(name1)
+                if (name1 == "Battery"){
+                    content.distance = 200
+                }
+                else if (name1 == "Memory"){
+                    content.distance = 315
+                }
+                else if (name1 == "OS"){
+                    content.distance = 170
+                }
+                else if (name1 == "CPU"){
+                    content.distance = 160
+                }
+                else if (name1 == "DISK"){
+                    content.distance = 250
+                }
+                else if (name1 == "GPU"){
+                    content.distance = 250
+                }
+                if (content.lastClick == ""){
+                    content.lastClick = name1
+
+                    backend.showScreen(name1,1) // show
+
+                }
+                else if (name1 == content.lastClick){
+                    content.lastClick = ""
+                    backend.showScreen(name1,2) // hiden
+                }
+                else if (name1 != content.lastClick){
+                    content.lastClick = name1
+                    backend.showScreen(name1,0) // change
+                }
+
+
             }
         }
     }

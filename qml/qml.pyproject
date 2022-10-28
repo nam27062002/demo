@@ -1,3 +1,3 @@
 {
-    "files": ["assets/ButtonPower.qml","main.qml","pages/PagePanel.qml","pages/PageSummary.qml","main.py","assets/FormInfoRight.qml","assets/ImgButton.qml","assets/FormInfoLeft.qml"]
+    "files": ["main.qml","pages/PageSummary.qml","assets/FormInfoRight.qml","assets/ImgButton.qml","assets/FormInfoLeft.qml","pages/PageSystemMonitor.qml","assets/ButtonPower.qml","main.py","pages/PagePanel.qml","pages/PageHistory.qml"]
 }

@@ -7,8 +7,8 @@ import 'assets'
 Window {
     id: mainWindow
     property string statePage: "password"
-    width: 1500
-    height: 700
+    width: 500
+    height: 500
     visible: true
     x: screen.width/2 - width/2
     y: screen.height/2 - height/2
@@ -17,8 +17,6 @@ Window {
     property string sourceIconApp: "../images/icon.ico"
     property bool stateWindowSize: false
     property bool isCenterScreeen: true
-    property int toWidth: 1200
-    property int toHeight: 700
     flags: Qt.Window | Qt.FramelessWindowHint
 
     // animation window center
@@ -36,22 +34,6 @@ Window {
         property: "y"
         to: screen.height/2 - mainWindow.height/2
         duration: 1000
-        easing.type: Easing.InOutQuint
-    }
-    PropertyAnimation{
-        id: animationZoomWindow1
-        target: mainWindow
-        property: "width"
-        to: toWidth
-        duration: 2000
-        easing.type: Easing.InOutQuint
-    }
-    PropertyAnimation{
-        id: animationZoomWindow2
-        target: mainWindow
-        property: "height"
-        to: toHeight
-        duration: 2000
         easing.type: Easing.InOutQuint
     }
     // background
@@ -185,7 +167,7 @@ Window {
             StackView{
                 id: view
                 anchors.fill: parent
-                initialItem: Qt.resolvedUrl("pages/PageSummary.qml")
+                initialItem: Qt.resolvedUrl("pages/PagePassword.qml")
             }
         }
     }
@@ -265,11 +247,12 @@ Window {
             if (IsPassword){
                 statePage = "panel";
                 backend.loopPanel()
-                mainWindow.width = 1500
+                mainWindow.width = 1700
                 mainWindow.height = 700
                 view.push(Qt.resolvedUrl("pages/PagePanel.qml"))
             }
         }
+
     }
 
 }
@@ -281,6 +264,6 @@ Window {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.5}
+    D{i:0;formeditorZoom:0.33}
 }
 ##^##*/

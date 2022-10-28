@@ -1,7 +1,9 @@
+from concurrent.futures import thread
 import subprocess, os, psutil
 import screen_brightness_control as sbc
 from subprocess import call
 import platform
+import threading
 class data:
     def __init__(self):
         self.password = "123456"
@@ -36,18 +38,94 @@ class data:
                 self.infoCPU.pop(25)
         except:
             pass
+        for i in self.infoCPU:
+            if i[0] == "Flags":
+                self.infoCPU.remove(i)
+                break
+        for i in self.infoCPU:
+            if i[0] == "NUMA node0 CPU(s)":
+                self.infoCPU.remove(i)
+                break
+            
     def __getInfoDisk(self):
         result = self.__runTerminal("lshw -class disk -class storage")
         self.infoDisk = self.__convertToList(result)
+        s = []
+        for i in self.infoDisk:
+            if i[0] == "WARNING" or i[0] == "":
+                s.append(i)
+        index = 0
+        for i in self.infoDisk:
+            if index == 1:
+                s.append(i)
+            if i[0] == "clock":
+                index =  1
+        for i in s:
+            try:
+                self.infoDisk.remove(i)
+            except:
+                pass
+        for i in self.infoDisk:  
+            if i[0] == "physical id":
+                try:
+                    self.infoDisk.remove(i)
+                except:
+                    pass
+        result1 = self.__runTerminal("sudo lshw -c disk", True)
+        v1 = self.__convertToList(result1)
+        x = self.__findInList("size", v1)
+        self.infoDisk.append(['size',x])
     def __getInfoRAM(self):
         result = self.__runTerminal("sudo dmidecode --type 17", True)
         self.infoRAM = self.__convertToList(result)
+        s = []
+        try:
+            for i in self.infoRAM:
+                if i[0] == '' or i[1] == '' or i[1] == "Unknown" or i[1] == "None" or i[0] == "[sudo] password for nam":
+                    s.append(i)
+            for i in s:
+                self.infoRAM.remove(i)
+        except:
+            pass
+        
+        
     def __getInfoBattery(self):
         result = self.__runTerminal("upower -i `upower -e | grep 'BAT'`")
         self.infoBattery = self.__convertToList(result)
+        self.infoBattery.pop(4)
+        try:
+            for i in self.infoBattery:
+                if i[0] == '' or i[1] == '':
+                    self.infoBattery.remove(i)
+        except:
+            pass
+        for i in range(-2,0,1):
+            self.infoBattery.pop(i)
     def __getInfoGPU(self):
         result = self.__runTerminal("glxinfo -B | less", True)
         self.infoGPU = self.__convertToList(result)
+        s = []
+        for i in self.infoGPU:
+            if i[0] == "" or i[1] == "0" or i[1] == "" or i[0].find("OpenGL") != -1:
+                s.append(i)
+        for i in s:
+            self.infoGPU.remove(i)
+        index = 0 
+        for count,i in enumerate(self.infoGPU):
+            if i[0] == "Device":
+                index = count
+                break
+        ss = self.infoGPU[index][1]
+        start = 0
+        c = ""
+        for i in range(len(ss) - 1,-1,-1):
+            if ss[i] == ")":
+                start = 1
+            if start == 1:
+                c = ss[i] + c
+            if ss[i] == "(":
+                break
+        self.infoGPU[index][1] =  ss.removesuffix(c)
     def getInfoMutiDevice(self):
         s = []     
         s.append(self.__findInList("Description",self.infoOS))
@@ -55,7 +133,7 @@ class data:
         s.append(self.__findInList("product",self.infoDisk))
         s.append(self.__findInList("Size",self.infoRAM)+ "@ "+ self.__findInList("Speed",self.infoRAM))
         s.append(self.__findInList("energy-full-design",self.infoBattery))   
-        s.append(self.__findInList("OpenGL renderer string",self.infoGPU))   
+        s.append(self.__findInList("Device",self.infoGPU))   
         return s
     @staticmethod
     def __convertToList(c):
@@ -259,3 +337,76 @@ class data:
             return self.infoBattery
         else:
             return self.infoGPU
+    def getPercentCPU(self):
+        return psutil.cpu_percent()
+    def getMemory(self):
+        return int(self.__findInList("Size",self.infoRAM).replace("GB",""))
+    def getPercentRamUsed(self):
+        return psutil.virtual_memory()[2]
+    def writeFile(self):
+        self.__runTerminal("sudo intel_gpu_top -o outfile.txt",True)
+    def getToTalMemoryDisk(self):
+        x = self.__runTerminal("df -h")
+        s = []
+        a = []
+        v = ""
+        for count,i in enumerate(x):
+            if i == "\n" or count + 1 == len(x):
+                s.append(a)
+                a = []
+                continue
+            if i != " ":
+                v += i
+            elif i == " " and x[count - 1] != " ":
+                a.append(v)
+                v = ""
+        s.pop(0)
+        return s
+    @staticmethod
+    def convertMB(data):
+        if "K" in data:
+            return 0
+        elif "M" in data:
+            data = data.replace("M","")
+            data1 = ""
+            for i in range(len(data)):
+                if (data[i] == ","):
+                    data1 += "."
+                else:
+                    data1 += data[i]
+            return float(data1) / 1024
+        elif "G" in data:
+            data = data.replace("G","")
+            data1 = ""
+            for i in range(len(data)):
+                if (data[i] == ","):
+                    data1 += "."
+                else:
+                    data1 += data[i]
+            return float(data1)
+    def getDataMemoryDisk(self):
+        v = self.getToTalMemoryDisk()
+        total = 0
+        used = 0
+        for i in v:
+            total += self.convertMB(i[1])
+            used += self.convertMB(i[2])
+        return [int(total),int(used),int(total) - int(used)]
+    def readFile(self):
+        f = open("outfile.txt")
+        for i in f:
+            a = i
+        s = []
+        c = ""
+        for count,i in enumerate(a):
+            if i == " " and a[count - 1] != " ":
+                s.append(c)
+                c = ""
+            elif i != " ":
+                c += i
+        try:
+            s.remove("")
+            return float(s[4])
+        except:
+            return "Error"
+        

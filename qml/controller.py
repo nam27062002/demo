@@ -11,8 +11,9 @@ class MainWindow(QObject):
         self.data = data()
         self.running = True
         self.threadPanel = False
+        self.threadSystem = False
         self.thread()
-    # ---------------------signal----------------------------
+    # ---------------------signal---------------------------------------
     getNamePC = Signal(str)
     checkPassword = Signal(bool)
     percentBrightness = Signal(int)
@@ -24,8 +25,13 @@ class MainWindow(QObject):
     statusTouchpad = Signal(str)
     statusMicro = Signal(bool)
     statusModePower = Signal(int)
-    seenSignalShowSceen = Signal(list)
+    seenSignalShowSceen = Signal(list,int)
     seenInfo = Signal(list)
+    seenPercentCPU = Signal(float)
+    seenDataSystem = Signal(int)
+    seenPercentRAM = Signal(float)
+    seenDataMemoryDisk = Signal(list)
+    seenPercentGPU = Signal(float)
     #-------------------send function-------------------------------------
     # nhan tinh hieu va gui ten pc
     @Slot()
@@ -52,6 +58,13 @@ class MainWindow(QObject):
             self.threadPanel = False
         else:
             self.threadPanel = True
+    # nhan tinh hieu loop system
+    @Slot()
+    def loopSystem(self):
+        if self.threadSystem:
+            self.threadSystem = False
+        else:
+            self.threadSystem = True
     # gui do sang man hinh 
     def seenBrightness(self):
         while self.running:
@@ -106,6 +119,30 @@ class MainWindow(QObject):
             if (self.threadPanel):
                 self.percentVolume.emit(self.data.getPercentVolume())
                 time.sleep(0.1)
+    # gui percent cpu 
+    def percentCPU(self):
+        while self.running:
+            if (self.threadSystem):
+                self.seenPercentCPU.emit(self.data.getPercentCPU())
+                self.seenPercentRAM.emit(self.data.getPercentRamUsed())
+                time.sleep(0.1)
+    # gui percent cpu 
+    def dataDisk(self):
+        while self.running:
+            if (self.threadSystem):
+                self.seenDataMemoryDisk.emit(self.data.getDataMemoryDisk())
+                time.sleep(10)
+    # gui percent cpu 
+    def percentGPU(self):
+        # threading.Thread(target=self.data.writeFile).start()
+        # while self.running:
+        #     if (self.threadSystem):
+        #         self.seenPercentGPU.emit(self.data.readFile())
+        #         time.sleep(1)
+        pass
+    @Slot()
+    def seenDataSystemm(self):
+        self.seenDataSystem.emit(self.data.getMemory())      
     # turn on Wifi
     @Slot(bool)
     def turnOnAndOffWifi(self,check):
@@ -150,9 +187,9 @@ class MainWindow(QObject):
     def changeVolume(self,value):
         self.data.changeVolume(value)
     # nhan tinh hieu show man hinh
-    @Slot(str)
-    def showScreen(self,data):
-        self.seenSignalShowSceen.emit(self.data.seenInfo(data))
+    @Slot(str,int)
+    def showScreen(self,data,val):
+        self.seenSignalShowSceen.emit(self.data.seenInfo(data),val)
     @Slot()
     def seenInfoOS(self):
         self.seenInfo.emit(self.data.getInfoMutiDevice())
@@ -167,3 +204,7 @@ class MainWindow(QObject):
         threading.Thread(target=self.seenStatusMic).start()
         threading.Thread(target=self.seenStatusPower).start()
         threading.Thread(target=self.seenStatusVolume).start()
+        threading.Thread(target=self.percentCPU).start()
+        threading.Thread(target=self.dataDisk).start()
+        threading.Thread(target=self.percentGPU).start()
+        
