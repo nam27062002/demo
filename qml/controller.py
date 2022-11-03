@@ -132,14 +132,6 @@ class MainWindow(QObject):
             if (self.threadSystem):
                 self.seenDataMemoryDisk.emit(self.data.getDataMemoryDisk())
                 time.sleep(10)
-    # gui percent cpu 
-    def percentGPU(self):
-        # threading.Thread(target=self.data.writeFile).start()
-        # while self.running:
-        #     if (self.threadSystem):
-        #         self.seenPercentGPU.emit(self.data.readFile())
-        #         time.sleep(1)
-        pass
     @Slot()
     def seenDataSystemm(self):
         self.seenDataSystem.emit(self.data.getMemory())      
@@ -206,5 +198,4 @@ class MainWindow(QObject):
         threading.Thread(target=self.seenStatusVolume).start()
         threading.Thread(target=self.percentCPU).start()
         threading.Thread(target=self.dataDisk).start()
-        threading.Thread(target=self.percentGPU).start()
         

@@ -343,8 +343,6 @@ class data:
         return int(self.__findInList("Size",self.infoRAM).replace("GB",""))
     def getPercentRamUsed(self):
         return psutil.virtual_memory()[2]
-    def writeFile(self):
-        self.__runTerminal("sudo intel_gpu_top -o outfile.txt",True)
     def getToTalMemoryDisk(self):
         x = self.__runTerminal("df -h")
         s = []
@@ -384,29 +382,4 @@ class data:
                 else:
                     data1 += data[i]
             return float(data1)
-    def getDataMemoryDisk(self):
-        v = self.getToTalMemoryDisk()
-        total = 0
-        used = 0
-        for i in v:
-            total += self.convertMB(i[1])
-            used += self.convertMB(i[2])
-        return [int(total),int(used),int(total) - int(used)]
-    def readFile(self):
-        f = open("outfile.txt")
-        for i in f:
-            a = i
-        s = []
-        c = ""
-        for count,i in enumerate(a):
-            if i == " " and a[count - 1] != " ":
-                s.append(c)
-                c = ""
-            elif i != " ":
-                c += i
-        try:
-            s.remove("")
-            return float(s[4])
-        except:
-            return "Error"
         

@@ -4,7 +4,7 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtGraphicalEffects 1.15
 import QtQuick.Dialogs 1.3
-
+import QtQml 2.0
 import "../assets"
 
 Rectangle{
@@ -97,13 +97,15 @@ Rectangle{
             anchors.rightMargin: 100
             Rectangle{
                 id: a1
-                color: "#00000000"
+                color: "white"
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.bottom: parent.bottom
                 width: parent.width/2
-
-
+                Datepicker {
+                    id: myDate
+                    width: 200
+                }
             }
         }
 
