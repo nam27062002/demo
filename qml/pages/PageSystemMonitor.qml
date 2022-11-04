@@ -106,6 +106,8 @@ Rectangle{
                 id: box11
                 color:"#00000000"
                 anchors.top: parent.top
+                anchors.leftMargin: 1
+                anchors.topMargin: 162
                 anchors.left: parent.left
                 width: parent.width/2
                 height: parent.height/2
@@ -123,6 +125,8 @@ Rectangle{
                 id: box12
                 color:"#00000000"
                 anchors.top: parent.top
+                anchors.leftMargin: 7
+                anchors.topMargin: 162
                 anchors.left: box11.right
                 width: parent.width/2
                 height: parent.height/2
@@ -145,16 +149,6 @@ Rectangle{
                 anchors.left: box11.left
                 width: parent.width/2
                 height: parent.height/2
-                CircularCanvasProgressBar{
-                    id: disk
-                    width: 280
-                    height: 280
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    value: 0.5
-                    name1:"GPU"
-                    colorBorder: "#55AAFF"
-                }
             }
             Rectangle{
                 color:"#00000000"
@@ -163,17 +157,77 @@ Rectangle{
                 anchors.left: box21.right
                 width: parent.width/2
                 height: parent.height/2
-                CircularCanvasProgressBar{
-                    id: gpu
+            }
+        }
+
+        Rectangle {
+            id: box2
+            width: parent.width/2
+            color: "#00000000"
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 0
+            anchors.leftMargin: 815
+            anchors.topMargin: 0
+            Rectangle {
+                id: box13
+                width: parent.width/2
+                height: parent.height/2
+                color: "#00000000"
+                anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.leftMargin: 1
+                anchors.topMargin: 162
+                CircularCanvasProgressBar {
+                    id: cpu1
                     width: 280
                     height: 280
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.horizontalCenter: parent.horizontalCenter
                     value: 0.5
-                    colorBorder: "#FF007F"
-                    name1: "DISK"
-                    isRam: true
+                    colorBorder: "#f6ff00"
                 }
+            }
+
+            Rectangle {
+                id: box14
+                width: parent.width/2
+                height: parent.height/2
+                color: "#00000000"
+                anchors.left: box13.right
+                anchors.top: parent.top
+                anchors.leftMargin: 7
+                anchors.topMargin: 162
+                CircularCanvasProgressBar {
+                    id: ram1
+                    width: 280
+                    height: 280
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    name1: "RAM"
+                    value: 0.5
+                    isRam: true
+                    colorBorder: "#55ff7f"
+                }
+            }
+
+            Rectangle {
+                id: box23
+                width: parent.width/2
+                height: parent.height/2
+                color: "#00000000"
+                anchors.left: box13.left
+                anchors.top: box13.bottom
+            }
+
+            Rectangle {
+                id: box24
+                width: parent.width/2
+                height: parent.height/2
+                color: "#00000000"
+                anchors.left: box23.right
+                anchors.top: box23.top
             }
         }
     }
@@ -194,21 +248,12 @@ Rectangle{
             ram.valueUse = ram.ram * data
             ram.value = data
         }
-        function onSeenDataMemoryDisk(data){
-            gpu.ram = data[0]
-            gpu.valueUse = data[1]
-            gpu.value = data[1]/data[0]
-        }
-        function onSeenPercentGPU(data){
-            data /= 100
-            disk.value = data
-        }
     }
 }
 
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:0.5;height:700;width:1700}
+    D{i:0;autoSize:true;formeditorZoom:0.33;height:700;width:1700}D{i:18}
 }
 ##^##*/

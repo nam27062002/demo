@@ -43,7 +43,7 @@ class MainWindow(QObject):
         def newThread():
             self.checkPassword.emit(self.data.checkPassword(password))
         threading.Thread(target=newThread).start()
-    # nhan % do sang man hinh
+    # nhan % do sang man 
     @Slot(int)
     def funcChangeBrightness(self,percent):
         data.change_brightness(percent)
@@ -197,5 +197,4 @@ class MainWindow(QObject):
         threading.Thread(target=self.seenStatusPower).start()
         threading.Thread(target=self.seenStatusVolume).start()
         threading.Thread(target=self.percentCPU).start()
-        threading.Thread(target=self.dataDisk).start()
         
