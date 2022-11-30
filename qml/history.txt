@@ -3,3 +3,5 @@ Wi-fi|On|2022-12-1 0:31:28
 Wi-fi|Off|2022-12-1 0:31:46
 Wi-fi|On|2022-12-1 0:31:55
 Wi-fi|Off|2022-12-1 0:33:36
+Power|Balanced|2022-12-1 0:38:48
+Power|Performance|2022-12-1 0:38:59

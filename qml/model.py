@@ -444,7 +444,7 @@ class data:
         x = x.replace("%","")
         return float(x)
     def history(self):
-        f = open("history.txt","r")
+        f = open("qml/history.txt","r")
         lines = f.readlines()
         arr = []
         for line in lines:
@@ -461,7 +461,7 @@ class data:
         arr.reverse()
         return arr
     def saveFile(self):
-        f = open("history.txt","w")
+        f = open("qml/history.txt","w")
         self.listHistory.reverse()
         for i in self.listHistory:
             s = ""
