@@ -2,7 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 2.5
 Rectangle {
     id: box
-    width: 250
+    width: 220
     height: 100
     color: "#ffffff"
     border.color: "#00ff08"
@@ -19,9 +19,9 @@ Rectangle {
         height: h
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
-        anchors.leftMargin: marginLeft
         width: w
         source: sourceImg
+        anchors.leftMargin: 152
         anchors.verticalCenterOffset: 0
     }
     Switch {

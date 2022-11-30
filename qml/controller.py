@@ -32,7 +32,15 @@ class MainWindow(QObject):
     seenPercentRAM = Signal(float)
     seenDataMemoryDisk = Signal(list)
     seenPercentGPU = Signal(float)
+    seenToday = Signal(list)
+    SeenPercentGPU = Signal(float)
+    seenPercentBattery = Signal(float)
+    seenHistory = Signal(list)
     #-------------------send function-------------------------------------
+    # lay lich su sua doi
+    @Slot()
+    def getHistory(self):
+        self.seenHistory.emit(self.data.listHistory)
     # nhan tinh hieu va gui ten pc
     @Slot()
     def funcGetNamePC(self):
@@ -50,6 +58,7 @@ class MainWindow(QObject):
     # nhan tin hieu ket thuc chuong trinh
     @Slot()
     def closeProgram(self):
+        self.data.saveFile()
         self.running = False
     # nhan tinh hieu loop panel
     @Slot()
@@ -126,12 +135,13 @@ class MainWindow(QObject):
                 self.seenPercentCPU.emit(self.data.getPercentCPU())
                 self.seenPercentRAM.emit(self.data.getPercentRamUsed())
                 time.sleep(0.1)
-    # gui percent cpu 
-    def dataDisk(self):
+    # gui percent gpu
+    def percentGPU(self):
         while self.running:
             if (self.threadSystem):
-                self.seenDataMemoryDisk.emit(self.data.getDataMemoryDisk())
-                time.sleep(10)
+                self.seenPercentGPU.emit(self.data.getPercentGPU())
+                self.seenPercentBattery.emit(self.data.getPercentBattery())
+                time.sleep(1)
     @Slot()
     def seenDataSystemm(self):
         self.seenDataSystem.emit(self.data.getMemory())      
@@ -153,7 +163,7 @@ class MainWindow(QObject):
     @Slot(bool)
     def turnOnAndOffKeyboard(self,check):
         if (check):
-            self.data.disableorEnableKeyboard("enable")
+            self.data.disableorEnableKeyboard("changeModePower")
         else:
             self.data.disableorEnableKeyboard("disable")
     # change mode power
@@ -185,6 +195,9 @@ class MainWindow(QObject):
     @Slot()
     def seenInfoOS(self):
         self.seenInfo.emit(self.data.getInfoMutiDevice())
+    @Slot()
+    def seenDay(self):
+        self.seenToday.emit(self.data.getDate())
     # tao cac luong
     def thread(self):
         threading.Thread(target=self.seenBrightness).start()
@@ -197,4 +210,5 @@ class MainWindow(QObject):
         threading.Thread(target=self.seenStatusPower).start()
         threading.Thread(target=self.seenStatusVolume).start()
         threading.Thread(target=self.percentCPU).start()
+        threading.Thread(target=self.percentGPU).start()
         

@@ -4,6 +4,8 @@ import screen_brightness_control as sbc
 from subprocess import call
 import platform
 import threading
+import datetime
+from datetime import date
 class data:
     def __init__(self):
         self.password = "123456"
@@ -14,6 +16,7 @@ class data:
         self.infoRAM = []
         self.infoBattery = []
         self.infoGPU = []
+        self.listHistory = self.history()
         self.__getInfoOS()
         self.__getInfoCPU()
         self.__getInfoDisk()
@@ -21,7 +24,7 @@ class data:
         self.__getInfoBattery()
         self.__getInfoGPU()
     def __getInfoOS(self):
-        result = self.__runTerminal("lsb_release -a")
+        result = self.runTerminal("lsb_release -a")
         self.infoOS = self.__convertToList(result)
         my_system = platform.uname()
         self.infoOS.append(["System",my_system.system])
@@ -31,7 +34,7 @@ class data:
         self.infoOS.append(["Machine",my_system.machine])
         self.infoOS.append(["Processor",my_system.processor])
     def __getInfoCPU(self):
-        result = self.__runTerminal("lscpu")
+        result = self.runTerminal("lscpu")
         self.infoCPU = self.__convertToList(result)
         try:
             while len(self.infoCPU) >= 25:
@@ -45,10 +48,9 @@ class data:
         for i in self.infoCPU:
             if i[0] == "NUMA node0 CPU(s)":
                 self.infoCPU.remove(i)
-                break
-            
+                break        
     def __getInfoDisk(self):
-        result = self.__runTerminal("lshw -class disk -class storage")
+        result = self.runTerminal("lshw -class disk -class storage")
         self.infoDisk = self.__convertToList(result)
         s = []
         for i in self.infoDisk:
@@ -71,12 +73,12 @@ class data:
                     self.infoDisk.remove(i)
                 except:
                     pass
-        result1 = self.__runTerminal("sudo lshw -c disk", True)
+        result1 = self.runTerminal("sudo lshw -c disk", True)
         v1 = self.__convertToList(result1)
         x = self.__findInList("size", v1)
         self.infoDisk.append(['size',x])
     def __getInfoRAM(self):
-        result = self.__runTerminal("sudo dmidecode --type 17", True)
+        result = self.runTerminal("sudo dmidecode --type 17", True)
         self.infoRAM = self.__convertToList(result)
         s = []
         try:
@@ -86,11 +88,9 @@ class data:
             for i in s:
                 self.infoRAM.remove(i)
         except:
-            pass
-        
-        
+            pass    
     def __getInfoBattery(self):
-        result = self.__runTerminal("upower -i `upower -e | grep 'BAT'`")
+        result = self.runTerminal("upower -i `upower -e | grep 'BAT'`")
         self.infoBattery = self.__convertToList(result)
         self.infoBattery.pop(4)
         try:
@@ -102,7 +102,7 @@ class data:
         for i in range(-2,0,1):
             self.infoBattery.pop(i)
     def __getInfoGPU(self):
-        result = self.__runTerminal("glxinfo -B | less", True)
+        result = self.runTerminal("glxinfo -B | less", True)
         self.infoGPU = self.__convertToList(result)
         s = []
         for i in self.infoGPU:
@@ -166,14 +166,13 @@ class data:
             if (i == len(s) - 1):
                 res[count][1] = v.lstrip()
         return res
-
     @staticmethod
     def __findInList(value, v):
         for i in range(len(v)):
             if value in v[i][0]:
                 return v[i][1] + " "
                 break
-    def __runTerminal(self, request, pw=False):
+    def runTerminal(self, request, pw=False):
         if pw == True:
             return subprocess.getoutput('echo ' + self.password + "|sudo -S " + request)
         else:
@@ -196,37 +195,58 @@ class data:
     def getCurrentBrightness():
         return sbc.get_brightness()[0]
     def turnOnOrOffWifi(self, key):
-        self.__runTerminal("nmcli radio wifi " + key)
-
+        if key == "on":
+            self.addHistory("Wi-fi",1)
+        else:
+            self.addHistory("Wi-fi",0)
+        self.runTerminal("nmcli radio wifi " + key)
     def getStateWifi(self):
-        return self.__runTerminal("nmcli radio  wifi")
-    
+        return self.runTerminal("nmcli radio  wifi")   
+    def addHistory(self,device,status,check = 0):
+        if check == 0:
+            if status == 1:
+                s = "On"
+            else:
+                s = "Off"
+        else:
+            if check == 1:
+                s = "Performance"
+            elif check == 2:
+                s = "Balanced"
+            else:
+                s = "Power saver"
+        self.listHistory.reverse()
+        self.listHistory.append([device,s,self.getDatetimeNow()])
+        self.listHistory.reverse()
     def getStateBluetooth(self):
-        v = self.__runTerminal("service bluetooth status", False)
+        v = self.runTerminal("service bluetooth status", False)
         x = self.__convertToList(v)
         return self.__findInList("Status", x)
-
     def turnOffBluetooth(self):
+        self.addHistory("Bluetooth",0)
         try:
-            self.__runTerminal("sudo systemctl stop bluetooth")
+            self.runTerminal("sudo systemctl stop bluetooth")
         except:
             print("Error turn off bluetooth1")
         try:
-            self.__runTerminal("sudo systemctl stop bluetooth", True)
+            self.runTerminal("sudo systemctl stop bluetooth", True)
         except:
             print("Error turn off bluetooth2")
-
     def turnOnBluetooth(self):
+        self.addHistory("Bluetooth",1)
         try:
-            self.__runTerminal("sudo systemctl start bluetooth")
+            self.runTerminal("sudo systemctl start bluetooth")
         except:
             print("Error turn on bluetooth1")
         try:
-            self.__runTerminal("sudo systemctl start bluetooth", True)
+            self.runTerminal("sudo systemctl start bluetooth", True)
         except:
             print("Error turn on bluetooth2")
-    @staticmethod
-    def disableorEnableKeyboard(key):
+    def disableorEnableKeyboard(self,key):
+        if key == "enable":
+            self.addHistory("Keyboard",1)
+        else:
+            self.addHistory("Keyboard",0)
         x = subprocess.getoutput("xinput list")
         check = False
         res = ""
@@ -261,7 +281,7 @@ class data:
                                 break
                             else:
                                 res += x[j]
-            v = int(self.__findInList("Device Enabled (121)",self.__convertToList(self.__runTerminal("xinput list-props " + res))))
+            v = int(self.__findInList("Device Enabled (121)",self.__convertToList(self.runTerminal("xinput list-props " + res))))
             if  v== 0:
                 return "Off"
             else:
@@ -269,11 +289,13 @@ class data:
         except:
             print("Error")
     def disableWebcam(self):
-        self.__runTerminal("sudo modprobe -r uvcvideo",True)
+        self.addHistory("Webcam",0)
+        self.runTerminal("sudo modprobe -r uvcvideo",True)
     def enableWebcam(self):
-        self.__runTerminal("sudo modprobe uvcvideo",True)
+        self.addHistory("Webcam",1)
+        self.runTerminal("sudo modprobe uvcvideo",True)
     def getStateWebcam(self):
-        v = self.__runTerminal("v4l2-ctl --list-devices")
+        v = self.runTerminal("v4l2-ctl --list-devices")
         if "Cannot" in v:
             return "Off"
         else:
@@ -282,26 +304,33 @@ class data:
         return str(subprocess.check_output(["gsettings", "get", "org.gnome.desktop.peripherals.touchpad", "send-events"]))
     def toggle_touchpad(self):
         if self.getStateTouchpad().__contains__("enable"):
+            self.addHistory("Touchpad",0)
             newval = 'disabled'
         else:
+            self.addHistory("Touchpad",1)
             newval = 'enabled'
         subprocess.Popen(["gsettings", "set", "org.gnome.desktop.peripherals.touchpad", "send-events", newval])
     def toggle_micro(self):
-        self.__runTerminal("amixer -D pulse sset Capture toggle")
+        if self.getStateMicro() == True:
+            self.addHistory("Micro",1)
+        else:
+            self.addHistory("Micro",0)
+        self.runTerminal("amixer -D pulse sset Capture toggle")
     def getStateMicro(self):      
-        if self.__runTerminal("pactl list | sed -n '/^Source/,/^$/p' | grep Mute").count("yes") == 2:
+        if self.runTerminal("pactl list | sed -n '/^Source/,/^$/p' | grep Mute").count("yes") == 2:
             return False
         else:
             return True
     def changeModePower(self,key):  
-        if key == 1:        
-            self.__runTerminal('''gdbus call --system --dest net.hadess.PowerProfiles --object-path /net/hadess/PowerProfiles --method org.freedesktop.DBus.Properties.Set 'net.hadess.PowerProfiles' 'ActiveProfile' "<'performance'>"''')
+        self.addHistory("Power",1,key) 
+        if key == 1:     
+            self.runTerminal('''gdbus call --system --dest net.hadess.PowerProfiles --object-path /net/hadess/PowerProfiles --method org.freedesktop.DBus.Properties.Set 'net.hadess.PowerProfiles' 'ActiveProfile' "<'performance'>"''')
         elif key == 2:
-            self.__runTerminal('''gdbus call --system --dest net.hadess.PowerProfiles --object-path /net/hadess/PowerProfiles --method org.freedesktop.DBus.Properties.Set 'net.hadess.PowerProfiles' 'ActiveProfile' "<'balanced'>"''')
+            self.runTerminal('''gdbus call --system --dest net.hadess.PowerProfiles --object-path /net/hadess/PowerProfiles --method org.freedesktop.DBus.Properties.Set 'net.hadess.PowerProfiles' 'ActiveProfile' "<'balanced'>"''')
         else:
-            self.__runTerminal('''gdbus call --system --dest net.hadess.PowerProfiles --object-path /net/hadess/PowerProfiles --method org.freedesktop.DBus.Properties.Set 'net.hadess.PowerProfiles' 'ActiveProfile' "<'power-saver'>"''')
+            self.runTerminal('''gdbus call --system --dest net.hadess.PowerProfiles --object-path /net/hadess/PowerProfiles --method org.freedesktop.DBus.Properties.Set 'net.hadess.PowerProfiles' 'ActiveProfile' "<'power-saver'>"''')
     def getStateModePower(self):
-        res = self.__runTerminal("gdbus introspect --system --dest net.hadess.PowerProfiles --object-path /net/hadess/PowerProfiles")
+        res = self.runTerminal("gdbus introspect --system --dest net.hadess.PowerProfiles --object-path /net/hadess/PowerProfiles")
         index = res.find("ActiveProfile")
         if res[index + 17] + res[index + 18] == "ba":
             return 2
@@ -313,7 +342,7 @@ class data:
     def changeVolume(value):
         call(["amixer", "-D", "pulse", "sset", "Master", str(value) + "%"])
     def getPercentVolume(self):
-        res = self.__runTerminal("amixer -D pulse")
+        res = self.runTerminal("amixer -D pulse")
         s = ""
         check = False
         for i in range(res.find("Front Left: Playback"),len(res),1):
@@ -344,7 +373,7 @@ class data:
     def getPercentRamUsed(self):
         return psutil.virtual_memory()[2]
     def getToTalMemoryDisk(self):
-        x = self.__runTerminal("df -h")
+        x = self.runTerminal("df -h")
         s = []
         a = []
         v = ""
@@ -382,4 +411,67 @@ class data:
                 else:
                     data1 += data[i]
             return float(data1)
-        
+    @staticmethod
+    def getDate():
+        today = date.today()
+        return [today.day,today.month,today.year]
+    @staticmethod
+    def getPercentGPU():
+        f = open("qml/gpu.txt","r")
+        lines = f.readlines()
+        x = ""
+        for line in lines:
+            x = line
+        arr = []
+        s = ""
+        for index,value in enumerate(x):
+            if value != " ":
+                s += value
+            elif value == " " and x[index - 1] != " ":
+                arr.append(s)
+                s = ""
+        try:
+            return float(arr[5])
+        except:
+            pass
+    def getPercentBattery(self):
+        x = self.runTerminal("upower -i `upower -e | grep 'BAT'`")
+        x = self.__convertToList(x)
+        for i in x:
+            if i[0] == "percentage":
+                x = i[1]
+                break
+        x = x.replace("%","")
+        return float(x)
+    def history(self):
+        f = open("history.txt","r")
+        lines = f.readlines()
+        arr = []
+        for line in lines:
+            arr.append([])
+            s = ""
+            for index,i in enumerate(line):
+                if i != "|":
+                    s += i
+                else:
+                    arr[-1].append(s)
+                    s = ""
+                if index == len(line) - 2:
+                    arr[-1].append(s)
+        arr.reverse()
+        return arr
+    def saveFile(self):
+        f = open("history.txt","w")
+        self.listHistory.reverse()
+        for i in self.listHistory:
+            s = ""
+            for j in range(len(i)):
+                if j != len(i) - 1:
+                    s += i[j] + "|"
+                else:
+                    s += i[j] + "\n"
+            f.write(s)
+    @staticmethod
+    def getDatetimeNow():
+        x = datetime.datetime.now()
+        return str(x.year) + "-" +str(x.month) + "-" +str(x.day) +  " " + str(x.hour) + ":" + str(x.minute) + ":" + str(x.second)           

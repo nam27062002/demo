@@ -247,7 +247,7 @@ Window {
             if (IsPassword){
                 statePage = "panel";
                 backend.loopPanel()
-                mainWindow.width = 1700
+                mainWindow.width = 1100
                 mainWindow.height = 700
                 view.push(Qt.resolvedUrl("pages/PagePanel.qml"))
             }

@@ -47,6 +47,8 @@ Rectangle{
             colorDefault: "#55aaff"
             onClicked: {
                 backend.loopPanel()
+                mainWindow.width = 1100
+                mainWindow.height = 700
                 view.push(Qt.resolvedUrl("PagePanel.qml"))
             }
         }
@@ -64,6 +66,8 @@ Rectangle{
             text: "System Monitor"
             onClicked: {
                 backend.loopSystem()
+                mainWindow.width = 1700
+                mainWindow.height = 700
                 view.push(Qt.resolvedUrl("PageSystemMonitor.qml"))
             }
         }
@@ -73,6 +77,8 @@ Rectangle{
             btnIconSource: "../../images/svg_images/history.svg"
             text: "Usage History"
             onClicked: {
+                mainWindow.width = 1100
+                mainWindow.height = 700
                 view.push(Qt.resolvedUrl("PageHistory.qml"))
             }
         }

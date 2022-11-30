@@ -51,6 +51,8 @@ Rectangle{
             onClicked: {
                 backend.loopPanel()
                 backend.loopSystem()
+                mainWindow.width = 1100
+                mainWindow.height = 700
                 view.push(Qt.resolvedUrl("PagePanel.qml"))
             }
         }
@@ -61,6 +63,8 @@ Rectangle{
             text: "Summary"
             onClicked: {
                 backend.loopSystem()
+                mainWindow.width = 1700
+                mainWindow.height = 700
                 view.push(Qt.resolvedUrl("PageSummary.qml"))
             }
 
@@ -78,6 +82,8 @@ Rectangle{
             btnIconSource: "../../images/svg_images/history.svg"
             text: "Usage History"
             onClicked: {
+                mainWindow.width = 1100
+                mainWindow.height = 700
                 backend.loopSystem()
                 view.push(Qt.resolvedUrl("PageHistory.qml"))
             }
@@ -181,12 +187,13 @@ Rectangle{
                 anchors.topMargin: 162
                 CircularCanvasProgressBar {
                     id: cpu1
+                    name1: "GPU"
                     width: 280
                     height: 280
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.horizontalCenter: parent.horizontalCenter
                     value: 0.5
-                    colorBorder: "#f6ff00"
+                    colorBorder: "#ff028d"
                 }
             }
 
@@ -201,14 +208,15 @@ Rectangle{
                 anchors.topMargin: 162
                 CircularCanvasProgressBar {
                     id: ram1
+                    aaa: 0
+                    name1: "Battery"
                     width: 280
                     height: 280
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.horizontalCenter: parent.horizontalCenter
-                    name1: "RAM"
                     value: 0.5
                     isRam: true
-                    colorBorder: "#55ff7f"
+                    colorBorder: "#05a8d0"
                 }
             }
 
@@ -231,9 +239,9 @@ Rectangle{
             }
         }
     }
-//    Component.onCompleted: {
-//        backend.seenDataSystemm()
-//    }
+    Component.onCompleted: {
+        backend.seenDataSystemm()
+    }
     Connections{
         target: backend
         function onSeenPercentCPU(data){
@@ -248,12 +256,22 @@ Rectangle{
             ram.valueUse = ram.ram * data
             ram.value = data
         }
+        function onSeenPercentGPU(data){
+            data /= 100
+            cpu1.value = data;
+        }
+        function onSeenPercentBattery(data){
+            data /= 100
+            ram1.value = data;
+        }
     }
 }
 
 
+
+
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:0.33;height:700;width:1700}D{i:18}
+    D{i:0;autoSize:true;formeditorZoom:0.5;height:700;width:1700}
 }
 ##^##*/

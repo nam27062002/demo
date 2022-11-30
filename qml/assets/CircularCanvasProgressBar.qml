@@ -8,6 +8,7 @@ ProgressBar {
     property bool isRam: false
     property int ram: 1
     property real valueUse: 2
+    property int aaa: 1
     background: Rectangle {
         radius: control.width / 2
         color: "#000000"
@@ -51,7 +52,8 @@ ProgressBar {
         Label {
             id: label
             color: "white"
-            text: "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Titillium Web'; font-size:11pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'MS Shell Dlg 2'; font-size:16pt; font-weight:600; color:"+colorBorder+";\">"+name1+"</span><span style=\" font-family:'MS Shell Dlg 2'; font-size:16pt;\"> </span><span style=\" font-family:'MS Shell Dlg 2'; font-size:16pt; color:#ffffff;\">USAGE</span></p></body></html>"
+            text: if (aaa == 1) return "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Titillium Web'; font-size:11pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'MS Shell Dlg 2'; font-size:16pt; font-weight:600; color:"+colorBorder+";\">"+name1+"</span><span style=\" font-family:'MS Shell Dlg 2'; font-size:16pt;\"> </span><span style=\" font-family:'MS Shell Dlg 2'; font-size:16pt; color:#ffffff;\">USAGE</span></p></body></html>"
+            else return "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Titillium Web'; font-size:11pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'MS Shell Dlg 2'; font-size:16pt; font-weight:600; color:"+colorBorder+";\">"+name1+"</span><span style=\" font-family:'MS Shell Dlg 2'; font-size:16pt;\"> </span><span style=\" font-family:'MS Shell Dlg 2'; font-size:16pt; color:#ffffff;\"></span></p></body></html>";
             textFormat: Text.RichText
             horizontalAlignment: Text.AlignHCenter
             anchors.horizontalCenter: parent.horizontalCenter
@@ -76,7 +78,7 @@ ProgressBar {
             id: label2
             visible: if (isRam) return true; else return false;
             color: "#ffffff"
-            text: "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Titillium Web'; font-size:11pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'MS Shell Dlg 2'; font-size:16pt; font-weight:600; color:"+colorBorder+";\">"+Math.round(control.valueUse * 100)/100+"</span><span style=\" font-family:'MS Shell Dlg 2'; font-size:16pt; font-weight:600; color:#ffffff;\">/"+ram+"GB</span></p></body></html>"
+            text: if (aaa == 1) return "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Titillium Web'; font-size:11pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'MS Shell Dlg 2'; font-size:16pt; font-weight:600; color:"+colorBorder+";\">"+Math.round(control.valueUse * 100)/100+"</span><span style=\" font-family:'MS Shell Dlg 2'; font-size:16pt; font-weight:600; color:#ffffff;\">/"+ram+"GB</span></p></body></html>"
             anchors.top: parent.top
             horizontalAlignment: Text.AlignHCenter
             anchors.horizontalCenterOffset: 1
@@ -89,6 +91,6 @@ ProgressBar {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:0.9;height:500;width:500}D{i:6}
+    D{i:0;autoSize:true;formeditorZoom:0.9;height:500;width:500}
 }
 ##^##*/

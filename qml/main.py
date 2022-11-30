@@ -6,9 +6,7 @@ from PySide2.QtQml import QQmlApplicationEngine
 from PySide2.QtCore import QObject,Slot,Signal
 from pathlib import Path
 from controller import MainWindow
-
 if __name__ == "__main__":
-    
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()
     main = MainWindow()

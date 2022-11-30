@@ -44,6 +44,8 @@ Rectangle{
             text: "Summary"
             onClicked: {
                 backend.loopPanel()
+                mainWindow.width = 1700
+                mainWindow.height = 700
                 view.push(Qt.resolvedUrl("PageSummary.qml"))
             }
 
@@ -54,6 +56,8 @@ Rectangle{
             btnIconSource: "../../images/svg_images/system.svg"
             text: "System Monitor"
             onClicked: {
+                mainWindow.width = 1700
+                mainWindow.height = 700
                 backend.loopPanel()
                 backend.loopSystem()
                 view.push(Qt.resolvedUrl("PageSystemMonitor.qml"))
@@ -67,6 +71,8 @@ Rectangle{
             text: "Usage History"
             onClicked: {
                 backend.loopPanel()
+                mainWindow.width = 1100
+                mainWindow.height = 700
                 view.push(Qt.resolvedUrl("PageHistory.qml"))
             }
 
@@ -211,7 +217,8 @@ Rectangle{
                 width: parent.width/3
                 ButtonSwitch{
                     anchors.verticalCenter: parent.verticalCenter ;
-                    anchors.horizontalCenter: parent.horizontalCenter}
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
             }
             Rectangle{
                 id:formBluetooth
@@ -358,6 +365,6 @@ Rectangle{
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:0.5;height:700;width:1200}
+    D{i:0;autoSize:true;formeditorZoom:0.5;height:700;width:1100}
 }
 ##^##*/
