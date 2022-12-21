@@ -54,6 +54,7 @@ Rectangle{
                 mainWindow.width = 1100
                 mainWindow.height = 700
                 view.push(Qt.resolvedUrl("PagePanel.qml"))
+                statePage = "Control panel";
             }
         }
         LeftMenuBtn{
@@ -66,6 +67,7 @@ Rectangle{
                 mainWindow.width = 1700
                 mainWindow.height = 700
                 view.push(Qt.resolvedUrl("PageSummary.qml"))
+                statePage = "Summary";
             }
 
         }
@@ -86,6 +88,7 @@ Rectangle{
                 mainWindow.height = 700
                 backend.loopSystem()
                 view.push(Qt.resolvedUrl("PageHistory.qml"))
+                statePage = "Usage History";
             }
         }
     }

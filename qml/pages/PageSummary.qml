@@ -50,13 +50,14 @@ Rectangle{
                 mainWindow.width = 1100
                 mainWindow.height = 700
                 view.push(Qt.resolvedUrl("PagePanel.qml"))
+                statePage = "Summary";
             }
         }
         LeftMenuBtn{
             id: btnInfomation
             anchors.top: btnControl.bottom
             btnIconSource: "../../images/svg_images/infomation.svg"
-            text: "Summary"
+            text: "Control panel"
             isActive: true
         }
         LeftMenuBtn{
@@ -69,6 +70,7 @@ Rectangle{
                 mainWindow.width = 1700
                 mainWindow.height = 700
                 view.push(Qt.resolvedUrl("PageSystemMonitor.qml"))
+                statePage = "System Monitor";
             }
         }
         LeftMenuBtn{
@@ -80,6 +82,7 @@ Rectangle{
                 mainWindow.width = 1100
                 mainWindow.height = 700
                 view.push(Qt.resolvedUrl("PageHistory.qml"))
+                statePage = "Usage History";
             }
         }
     }

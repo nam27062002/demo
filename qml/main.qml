@@ -6,7 +6,7 @@ import QtQuick.Dialogs 1.3
 import 'assets'
 Window {
     id: mainWindow
-    property string statePage: "password"
+    property string statePage: "Enter your password"
     width: 500
     height: 500
     visible: true
@@ -58,7 +58,7 @@ Window {
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
                 anchors.rightMargin: 105
-                anchors.leftMargin: if (statePage == "password") return 0; else if (statePage == "panel") return 70
+                anchors.leftMargin: if (statePage == "Enter your password") return 0; else return 70
                 // event move window
                 DragHandler {
                     onActiveChanged: if(active && !stateWindowSize){
@@ -95,7 +95,7 @@ Window {
                 // text title
                 Label{
                     id: textTitle
-                    text: if (statePage == "password") return "Enter your password"; else if (statePage == "panel") return "Device Manage";
+                    text: statePage
                     color: "#c3cbdd"
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: icon.right
@@ -245,7 +245,7 @@ Window {
         target: backend
         function onCheckPassword(IsPassword){
             if (IsPassword){
-                statePage = "panel";
+                statePage = "Control panel";
                 backend.loopPanel()
                 mainWindow.width = 1100
                 mainWindow.height = 700

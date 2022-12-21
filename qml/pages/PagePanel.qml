@@ -47,6 +47,7 @@ Rectangle{
                 mainWindow.width = 1700
                 mainWindow.height = 700
                 view.push(Qt.resolvedUrl("PageSummary.qml"))
+                statePage = "Summary";
             }
 
         }
@@ -61,6 +62,7 @@ Rectangle{
                 backend.loopPanel()
                 backend.loopSystem()
                 view.push(Qt.resolvedUrl("PageSystemMonitor.qml"))
+                statePage = "System Monitor";
             }
 
         }
@@ -74,6 +76,7 @@ Rectangle{
                 mainWindow.width = 1100
                 mainWindow.height = 700
                 view.push(Qt.resolvedUrl("PageHistory.qml"))
+                statePage = "Usage History";
             }
 
         }

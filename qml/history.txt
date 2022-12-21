@@ -5,3 +5,15 @@ Wi-fi|On|2022-12-1 0:31:55
 Wi-fi|Off|2022-12-1 0:33:36
 Power|Balanced|2022-12-1 0:38:48
 Power|Performance|2022-12-1 0:38:59
+Wi-fi|Off|2022-12-21 11:32:44
+Wi-fi|On|2022-12-21 11:32:59
+Webcam|Off|2022-12-21 11:33:28
+Webcam|On|2022-12-21 11:35:11
+Keyboard|Off|2022-12-21 11:47:37
+Keyboard|Off|2022-12-21 11:47:41
+Keyboard|Off|2022-12-21 11:47:45
+Keyboard|Off|2022-12-21 11:47:47
+Wi-fi|Off|2022-12-21 11:47:51
+Wi-fi|On|2022-12-21 11:47:54
+Keyboard|Off|2022-12-21 11:48:0
+Keyboard|Off|2022-12-21 11:48:3
